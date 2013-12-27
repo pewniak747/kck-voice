@@ -2,7 +2,8 @@ from __future__ import division
 from matplotlib import pylab as plt
 import numpy as np
 import scipy.io.wavfile
-from scipy.signal import kaiser
+from scipy.signal import kaiser, decimate
+from copy import copy
 import os, re
 
 correct_count = 0
@@ -23,13 +24,16 @@ def analyze(filename):
       signal = [s[0] for s in signal]
     signal = signal * kaiser(samples_count, 100)
 
-    frequency = np.fft.rfft(signal)
-    frequency = abs(frequency)
+    spectrum = np.log(abs(np.fft.rfft(signal)))
+    hps = copy(spectrum)
+    for h in np.arange(2, 9):
+      dec = decimate(spectrum, h)
+      hps[:len(dec)] += dec
     peak_start = 50 * duration
-    peak = np.argmax(frequency[peak_start:])
+    peak = np.argmax(hps[peak_start:])
     fundamental = (peak_start + peak) / duration
 
-    if 85 < fundamental < 165:
+    if 50 < fundamental < 165:
       verdict = 'M'
     elif 180 < fundamental < 255:
       verdict = 'F'
@@ -49,7 +53,7 @@ def analyze(filename):
 
     #print(sampling_rate, duration, len(frequency[::duration]))
 
-    #plt.plot(frequency[0:3000])
+    #plt.plot(hps)
     #plt.show()
 
 filenames = os.listdir('wav')
