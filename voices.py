@@ -33,9 +33,9 @@ def analyze(filename):
     peak = np.argmax(hps[peak_start:])
     fundamental = (peak_start + peak) / duration
 
-    if 50 < fundamental < 165:
+    if fundamental < 165:
       verdict = 'M'
-    elif 180 < fundamental < 255:
+    elif 180 < fundamental:
       verdict = 'F'
     else:
       verdict = 'U'
