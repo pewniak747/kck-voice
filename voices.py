@@ -49,6 +49,8 @@ def analyze(filename):
 
     print("fundamendal frequency: " + "%.5f" % fundamental)
     print("verdict: " + verdict)
+    if correct != verdict:
+      print("WRONG")
     print("")
 
     #print(sampling_rate, duration, len(frequency[::duration]))
