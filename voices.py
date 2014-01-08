@@ -26,7 +26,7 @@ def analyze(filename):
 
     spectrum = np.log(abs(np.fft.rfft(signal)))
     hps = copy(spectrum)
-    for h in np.arange(2, 9):
+    for h in np.arange(2, 6):
       dec = decimate(spectrum, h)
       hps[:len(dec)] += dec
     peak_start = 50 * duration
